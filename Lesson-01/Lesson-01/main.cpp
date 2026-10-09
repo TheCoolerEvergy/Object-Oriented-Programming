@@ -47,16 +47,17 @@ public:
 	int mana;
 	int manaRegen; // (intelligence / 2) + proficiencyBonus + ((maxMana * intelligence) / 100)
 	int armourClass; // armourBonus
-	int meleeDamage; // 1d6
+	int meleeDamage; // weaponBonus + strength
 	int meleeRollBonus; // proficiencyBonus
-	int spellDamage; // 1d12
+	int spellDamage; // weaponBonus + (intelligence * 2)
 	int spellRollBonus; // proficiencyBonus
 	int critChance; // 1 (5%)
+	int bonusCritDamage; // 0 (Crits always roll dice damage a second time)
 	int actions; // 1 + (proficiencyBonus / 2)
 
 	// base stats
 	int strength; // gain +1 Melee Damage for every other point
-	int perception; // 
+	int perception; // increase damage on Crit by +1 per point
 	int endurance; // gain +1 Armour Class for every other point
 	int charisma; // gain +1 Spell Attack Rolls for every other point
 	int intelligence; // increase Spell Damage by +1 per point
@@ -66,37 +67,38 @@ public:
 	int proficiencyBonus; // increases a number of things, +1 proficiency bonus for every 5 levels starting with +2
 
 	// levelling
-	int statPoints;
-	int spentPoints;
+	int statPoints; // start with 10 + 1 per level (11 at level 1)
+	int spentPoints; // record of points spent on character
 	int characterLevel;
-	int experience;
-	int expToLvlUp;
+	int experience; // current experience gained this level
+	int expToLvlUp; // experience required to level up
+
+	// inventory
+	string SlotHead[1]; // ...armour slots
+	string SlotTorso[1]; // ...
+	string SlotLegs[1]; // ...armour slots
+
+	string SlotWeapons[1]; // weapon slots
+	string SlotConsumables[3]; // consumable gear slots
+
+	string Inventory[20]; // 20 inventory slots as storage
 
 };
 
-class ConsumableItem
+class Item
 {
-public:
-	string name;
-	int power; // the strength of the item (like the multipliers for damage)
-	string statBuffed; // chooses which stat to buff for the item
-	int duration; // no. of rounds the buff granted lasts for
-	
-
-
-	ConsumableItem(string x, int y) {
-		// constructor
-		name = x;
-		power = y;
-	}
-	~ConsumableItem() {
-		// destructor
-	}
+	public:
+		string name;
+		std::vector<string> itemType;
+		std::vector<string> itemAttributes;
+		std::vector<int> GearBonuses;
 };
 
-// Item List
+// ITEM LIST
+
+// Weapons
 int nextID = 0;
-std::vector<ConsumableItem> items;
+std::vector<Item> weapons;
 
 
 // FUNCTIONS
@@ -120,11 +122,15 @@ int ApplyDamage(int h, int d)
 	return h;
 }
 
-int RollDamage(std::uniform_int_distribution<int> dist, int bd, float multiplier)
+int RollDamage(int rollNum, std::uniform_int_distribution<int> dice, int bd)
 {
-	int bonus = dist(generator);
+	int d = 0;
 
-	int d = (bd + bonus) * multiplier;
+	for (int i = 0; i < rollNum; i++)
+	{
+
+		int d = d + dice(generator);
+	}
 
 	return d;
 }

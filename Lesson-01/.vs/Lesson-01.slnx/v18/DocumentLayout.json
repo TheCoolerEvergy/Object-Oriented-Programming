@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{CDEC5CF5-9F6C-40C0-99E0-E6D603A522C3}|Lesson-01\\Lesson-01.vcxproj|C:\\Users\\A0158931\\Documents\\GitHubRepo-OOP-GD\\Object Oriented Programming\\Lesson-01\\Lesson-01\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CDEC5CF5-9F6C-40C0-99E0-E6D603A522C3}|Lesson-01\\Lesson-01.vcxproj|solutionrelative:Lesson-01\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B1FE6B4A-F402-EA37-2F2E-A5A801BC0FB5}|..\\..\\..\\..\\AppData\\Roaming\\Microsoft\\VisualStudio\\18.0_06e8cd54\\SingleFileISense\\_sfi_78BDF157-6C97-4E6F-A005-6873A458920D_.vcxproj|C:\\Users\\A0158931\\Documents\\GitHubRepo-OOP-GD\\Object Oriented Programming\\Lesson-01\\Lesson-02-and-03.slnx||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{B1FE6B4A-F402-EA37-2F2E-A5A801BC0FB5}|..\\..\\..\\..\\AppData\\Roaming\\Microsoft\\VisualStudio\\18.0_06e8cd54\\SingleFileISense\\_sfi_78BDF157-6C97-4E6F-A005-6873A458920D_.vcxproj|solutionrelative:Lesson-02-and-03.slnx||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,8 +28,21 @@
               "RelativeDocumentMoniker": "Lesson-01\\main.cpp",
               "ToolTip": "C:\\Users\\A0158931\\Documents\\GitHubRepo-OOP-GD\\Object Oriented Programming\\Lesson-01\\Lesson-01\\main.cpp",
               "RelativeToolTip": "Lesson-01\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADMAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-10-09T11:27:26.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Lesson-02-and-03.slnx",
+              "DocumentMoniker": "C:\\Users\\A0158931\\Documents\\GitHubRepo-OOP-GD\\Object Oriented Programming\\Lesson-01\\Lesson-02-and-03.slnx",
+              "RelativeDocumentMoniker": "Lesson-02-and-03.slnx",
+              "ToolTip": "C:\\Users\\A0158931\\Documents\\GitHubRepo-OOP-GD\\Object Oriented Programming\\Lesson-01\\Lesson-02-and-03.slnx",
+              "RelativeToolTip": "Lesson-02-and-03.slnx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002855|",
               "WhenOpened": "2026-09-04T12:26:36.047Z",
               "EditorCaption": ""
             }

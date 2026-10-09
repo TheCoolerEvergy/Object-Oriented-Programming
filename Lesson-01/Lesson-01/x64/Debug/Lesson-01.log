@@ -1,4 +1,9 @@
 ﻿  main.cpp
 C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Lesson-01.vcxproj -> C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\x64\Debug\Lesson-01.exe
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(122,8): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(192,27): error C2065: 'playerDamDist': undeclared identifier
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(253,28): error C2065: 'playerDamDist': undeclared identifier
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(276,6): warning C4091: '': ignored on left of 'void' when no variable is declared
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(352,27): error C2065: 'enemyDamDist': undeclared identifier
+C:\Users\A0158931\Documents\GitHubRepo-OOP-GD\Object Oriented Programming\Lesson-01\Lesson-01\main.cpp(382,27): error C2065: 'enemyDamDist': undeclared identifier

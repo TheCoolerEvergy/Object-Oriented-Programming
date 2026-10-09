@@ -3,8 +3,14 @@ using namespace std;
 
 #include <random>;
 std::default_random_engine generator;
-std::uniform_int_distribution<int> enemyDamDist(1, 15); // enemy damage range
-std::uniform_int_distribution<int> playerDamDist(1, 10); // player damage range
+
+std::uniform_int_distribution<int> dFour(1, 4); // roll 1d4
+std::uniform_int_distribution<int> dSix(1, 6); // roll 1d6
+std::uniform_int_distribution<int> dEight(1, 8); // roll 1d8
+std::uniform_int_distribution<int> dTen(1, 10); // roll 1d10
+std::uniform_int_distribution<int> dTwelve(1, 12); // roll 1d12
+std::uniform_int_distribution<int> dTwenty(1, 20); // roll 1d20
+
 std::uniform_int_distribution<int> enemyChoiceRoll(1, 5); // enemy choice range
 
 // INITIALIZING VARIABLES
@@ -21,11 +27,114 @@ int maxMana = 50;
 int manaRegen = 5;
 int attackDamage = 15;
 int choice = 0;
-string restartChoice = "y";
+string restartChoice = "nil";
 int roundNum = 0;
+
+int playerConsumables[3]; // player item inventory
 
 // signals the game that it is running
 bool gameRunning = true;
+
+// CLASSES
+class Character
+{
+public:
+	// advanced stats
+	int maxHealth; // (5 + endurance) * proficiencyBonus
+	int health;
+	int healthRegen; // (1 + (charisma / 2)) * (proficiencyBonus / 2)
+	int maxMana; // 100 + (2 * intelligence)
+	int mana;
+	int manaRegen; // (intelligence / 2) + proficiencyBonus + ((maxMana * intelligence) / 100)
+	int armourClass; // armourBonus
+	int meleeDamage; // 1d6
+	int meleeRollBonus; // proficiencyBonus
+	int spellDamage; // 1d12
+	int spellRollBonus; // proficiencyBonus
+	int critChance; // 1 (5%)
+	int actions; // 1 + (proficiencyBonus / 2)
+
+	// base stats
+	int strength; // gain +1 Melee Damage for every other point
+	int perception; // 
+	int endurance; // gain +1 Armour Class for every other point
+	int charisma; // gain +1 Spell Attack Rolls for every other point
+	int intelligence; // increase Spell Damage by +1 per point
+	int agility; // gain +1 Melee Attack rolls for every other point
+	int luck; // increase Crit Chance by +1 for every other point
+
+	int proficiencyBonus; // increases a number of things, +1 proficiency bonus for every 5 levels starting with +2
+
+	// levelling
+	int statPoints;
+	int spentPoints;
+	int characterLevel;
+	int experience;
+	int expToLvlUp;
+
+};
+
+class ConsumableItem
+{
+public:
+	string name;
+	int power; // the strength of the item (like the multipliers for damage)
+	string statBuffed; // chooses which stat to buff for the item
+	int duration; // no. of rounds the buff granted lasts for
+	
+
+
+	ConsumableItem(string x, int y) {
+		// constructor
+		name = x;
+		power = y;
+	}
+	~ConsumableItem() {
+		// destructor
+	}
+};
+
+// Item List
+int nextID = 0;
+std::vector<ConsumableItem> items;
+
+
+// FUNCTIONS
+
+void DisplayStats(int pH, int pM, int eH, int eM)
+{
+	// player stats
+	std::cout << "\nPlayer Health: " << pH << endl;
+	std::cout << "\nPlayer Mana: " << pM << endl;
+	// enemy stats
+	std::cout << "\nEnemy Health: " << eH << endl;
+	std::cout << "\nEnemy Mana: " << eM << endl;
+}
+
+int ApplyDamage(int h, int d)
+{
+	h -= d;
+
+	if (h < 0) { h = 0; } // assures health does not drop into the negatives
+
+	return h;
+}
+
+int RollDamage(std::uniform_int_distribution<int> dist, int bd, float multiplier)
+{
+	int bonus = dist(generator);
+
+	int d = (bd + bonus) * multiplier;
+
+	return d;
+}
+
+bool IsAlive(int h)
+{
+	return h > 0;
+}
+
+// GAME LOOP
 
 int main()
 {
@@ -66,15 +175,14 @@ int main()
 
 			while (redoChoice == true)
 			{
-				std::cout << "Player Health: " << health << endl;
-				std::cout << "Player Mana: " << mana << " (" << manaRegen << "/regen per round) " << endl;
-				std::cout << "Enemy Health: " << eHealth << endl;
-				std::cout << "\n1. Attack\n2. Defend\n3. Heal (Costs 20 Mana)\n4. Mana Blast (Costs 30 Mana)\n5. Recover Mana\nChoose: "; // asks for the player's choice
+				DisplayStats(health, mana, eHealth, eMana);
+
+				std::cout << "\n1. Attack\n2. Defend\n3. Heal (Costs 20 Mana)\n4. Mana Blast (Costs 30 Mana)\n5. Recover Mana\n6. View Inventory\nChoose: "; // asks for the player's choice
 				std::cin >> choice; // collects the player's choice
 
 
 
-				if (choice < 1 || choice > 5)
+				if (choice < 1 || choice > 6)
 				{
 					std::cout << "\nThis choice is invalid, please choose another.\n";
 
@@ -86,17 +194,15 @@ int main()
 				{
 					std::cout << "\nYou Attacked the enemy with your weapon!\n";
 
-					int bonus = playerDamDist(generator); // generates a damage multiplier for the attack's damage
-
-					int dam = bd + bonus; // uses the rolled damage multiplier to increase damage (and make it random)
+					int dam = RollDamage(playerDamDist, bd, 1); // rolls the player's attack damage
 
 					if (ec == 2 && canBlock == true)
 					{
 						dam -= 8; // reduces attack damage by 8 if enemy Defended
 					}
-				
 
-					eHealth -= dam; // hit damage
+					eHealth = ApplyDamage(eHealth, dam);
+
 					std::cout << "You Attacked the enemy for " << dam << " damage!\n";
 
 					redoChoice = false;
@@ -148,10 +254,10 @@ int main()
 					{
 						mana -= 30;
 
-						int bonus = playerDamDist(generator);
-						int dam = (bd + bonus) * 2; // this spell has a 2x damage multiplier
+						// this spell has a 2x damage multiplier
+						int dam = RollDamage(playerDamDist, bd, 2);
 
-						eHealth -= dam;
+						eHealth = ApplyDamage(eHealth, dam);
 
 						std::cout << "You cast Mana Blast, dealing " << dam << " damage to the enemy!\n";
 
@@ -168,6 +274,11 @@ int main()
 
 					std::cout << "You restored " << (manaRegen * 2) << " Mana!\n";
 					redoChoice = false;
+				}
+
+				else if (choice == 6) // Action 6, View Inventory
+				{
+					void;
 				}
 			}
 		}
@@ -240,10 +351,12 @@ int main()
 						redoChoice = true;
 					}
 
-					int bonus = enemyDamDist(generator);
-					int dam = (ebd + bonus) * 2; // this spell has a 2x damage multiplier
+					eMana -= 30;
+					
+					// this spell has a 2x damage multiplier
+					int dam = RollDamage(enemyDamDist, ebd, 2);
 
-					health -= dam;
+					health = ApplyDamage(health, dam);
 
 					redoChoice = false;
 				}
@@ -271,15 +384,15 @@ int main()
 				{
 					std::cout << "The enemy has chosen to Attack!\n";
 
-					int bonus = enemyDamDist(generator); // generates a damage multiplier for the attack's damage
-					int dam = ebd + bonus; // uses the rolled damage multiplier to increase damage (and make it random)
+					int dam = RollDamage(enemyDamDist, ebd, 1); // rolls the enemy's attack damage
 
 					if (choice == 2)
 					{
 						dam -= 15; // reduces enemy damage by 15 if the player Defended
 					}
 
-					health -= dam; // hit damage
+					health = ApplyDamage(health, dam);
+
 					std::cout << "The enemy Attacks you for " << dam << " damage!\n";
 
 					redoChoice = false;
@@ -287,16 +400,19 @@ int main()
 			}
 		}
 
+		bool PAlive = IsAlive(health);
+		bool EAlive = IsAlive(eHealth);
+
 		// --- RESTART LOGIC ---
-		while (health <= 0 or eHealth <= 0)
+		while (PAlive == false || EAlive == false && gameRunning == true)
 		{
-			if (health <= 0)
+			if (PAlive == false)
 			{
 				std::cout << "You were defeated!\n";
 				std::cout << "The battle lasted for " << roundNum << " rounds!\n";
 			}
 
-			else if (eHealth <= 0)
+			else if (EAlive == false)
 			{
 				std::cout << "The enemy is defeated!\n";
 				std::cout << "The battle lasted for " << roundNum << " rounds!\n";
@@ -309,7 +425,7 @@ int main()
 			if (restartChoice == "y" || restartChoice == "Y") { main(); }
 			else if (restartChoice == "n" || restartChoice == "N") { gameRunning = false; }
 
-			while (restartChoice != "y" && restartChoice != "Y" && restartChoice != "n" && restartChoice != "N") 
+			while (restartChoice != "y" && restartChoice != "Y" && restartChoice != "n" && restartChoice != "N")
 			{
 				std::cout << "That answer is invalid.";
 				std::cout << "Would you like to play again?\nY/N?\nChoose: ";
@@ -318,7 +434,6 @@ int main()
 				if (restartChoice == "y" || restartChoice == "Y") { main(); }
 				else if (restartChoice == "n" || restartChoice == "N") { gameRunning = false; }
 			}
-			return 0;
 		}
 	}
 }
